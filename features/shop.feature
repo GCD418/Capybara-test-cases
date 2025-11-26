@@ -16,7 +16,7 @@ Feature: GMO OnLine Automation
   Scenario: Attempt to place an order without products
     Given I navigate to the product catalog
     When I select no products and click "Place An Order"
-    Then I should see an alert with the message "Please order something first"
+    Then I should see an alert with the message "Please Order Something First"
 
   # Business Logic (Price Calculation)
   Scenario: Calculate total for a specific product

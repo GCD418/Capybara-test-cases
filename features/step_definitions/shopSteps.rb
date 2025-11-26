@@ -98,6 +98,5 @@ end
 
 Then('I should see the receipt with the title {string}') do |title|
   expect(page).to have_content(title)
-  # Extra verification to ensure we are at the end
   expect(page).to have_content('Thank you for shopping with GMO OnLine')
 end
