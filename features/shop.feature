@@ -23,6 +23,7 @@ Feature: GMO OnLine Automation
     Given I navigate to the product catalog
     When I enter quantity "4" for the product "3 Person Dome Tent"
     And I click "Place An Order"
+    #Agregar el tax y el shipping
     Then I should be on the "Place Order" page
     And the line total should be "$ 1199.96"
     # Note: Unit price is 299.99 * 4
@@ -48,6 +49,7 @@ Feature: GMO OnLine Automation
       | State       | NY              |
       | Zip         | 10001           |
       | Phone       | 555-1234        |
+      | Email      | fakemail@gmail.com|
       | Card Number | 123456789012345 |
       | Exp Date    | 12/25           |
     And I click "Process Order"

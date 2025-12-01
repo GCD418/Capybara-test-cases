@@ -52,6 +52,7 @@ When('I fill the billing form with the following data:') do |table|
   fill_in('billState', with: data['State'])
   fill_in('billZipCode', with: data['Zip'])
   fill_in('billPhone', with: data['Phone'])
+  fill_in('billEmail', with: data['Email'])
   fill_in('CardNumber', with: data['Card Number'])
   fill_in('CardDate', with: data['Exp Date'])
   
