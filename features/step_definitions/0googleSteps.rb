@@ -69,3 +69,9 @@ Then('I see that information show below') do |table|
 end
 
 
+#ser mas especificos con las listas
+
+#online
+#no tan ambiguo
+#el recibo el monto el shipping 
+#escenario en cucumberpara el trello
