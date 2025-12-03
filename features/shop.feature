@@ -12,13 +12,11 @@ Feature: GMO OnLine Automation
     Then I should see the title "OnLine Catalog"
     And I should see the list of available products
 
-  #Empty Order Validation (Alert Handling)
   Scenario: Attempt to place an order without products
     Given I navigate to the product catalog
     When I select no products and click "Place An Order"
     Then I should see an alert with the message "Please Order Something First"
 
-  # Business Logic (Price Calculation)
   Scenario: Calculate total for a specific product
     Given I navigate to the product catalog
     When I enter quantity "4" for the product "3 Person Dome Tent"
@@ -26,16 +24,13 @@ Feature: GMO OnLine Automation
     #Agregar el tax y el shipping
     Then I should be on the "Place Order" page
     And the line total should be "$ 1199.96"
-    # Note: Unit price is 299.99 * 4
 
-  # Reset Functionality
   Scenario: Reset the order form
     Given I navigate to the product catalog
     When I enter quantity "10" for the product "External Frame Backpack"
     And I click the "Reset Form" button
     Then the quantity field for "External Frame Backpack" should be empty
 
-  # Full Flow (End to End)
   Scenario: Perform a successful complete purchase
     Given I navigate to the product catalog
     When I enter quantity "1" for the product "Glacier Sun Glasses"
