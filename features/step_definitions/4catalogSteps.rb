@@ -1,6 +1,3 @@
-# Step definitions for GMO catalog testing suite
-
-# Navigate to GMO homepage
 Given(/^the user navigates to GMO main page$/) do
   visit('http://demo.borland.com/gmopost/')
 end
@@ -10,13 +7,11 @@ When(/^the user selects "(.*?)"$/) do |link_text|
   click_button('bSubmit') 
 end
 
-# Verify catalog availability message is displayed
 Then(/^the page displays "(.*?)"$/) do |expected_message|
   message_locator = 'body > form > table > tbody > tr:nth-child(1) > td'
   expect(page).to have_selector(message_locator, text: expected_message)
 end
 
-# Check for general content presence
 Then(/^the content contains "(.*?)"$/) do |content_text|
   expect(page).to have_content(content_text)
 end
@@ -25,7 +20,6 @@ Then(/^the catalog shows "([^"]*)" priced at "\$ ([\d\.]+)"$/) do |product_title
   product_title_locator = "body > form > table > tbody > tr:nth-child(2) > td > div > center > table > tbody > tr > td:nth-child(2) > a > strong"
   products_array = all(product_title_locator).map(&:text)
   
-  # Locate product position in array
   product_index = products_array.index(product_title)
   raise "Product not found in catalog: #{product_title}" if product_index.nil?
 
@@ -45,7 +39,6 @@ Then(/^the information page loads successfully$/) do
   expect(page).to have_content('This is a sample online commerce application. It is not real.')
 end
 
-# Generic validation for multiple content items
 Then(/^these visual elements are present:$/) do |data_table|
   data_table.raw.flatten.each do |visual_element|
     expect(page).to have_content(visual_element)
@@ -53,9 +46,7 @@ Then(/^these visual elements are present:$/) do |data_table|
 end
 
 Then(/^the security notice appears on screen$/) do
-  # Check first part of security warning
   expect(page).to have_selector('font', text: 'For your privacy and security,')
-  # Check second part of security warning
   expect(page).to have_selector('font', text: 'DO NOT ENTER REAL BILLING OR SHIPPING INFORMATION')
 end
 
