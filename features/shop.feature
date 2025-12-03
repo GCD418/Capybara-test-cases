@@ -31,6 +31,20 @@ Feature: GMO OnLine Automation
     And I click the "Reset Form" button
     Then the quantity field for "External Frame Backpack" should be empty
 
+  Scenario Outline: Resetting the order form
+    When I add a "<Product>" to the order
+    And I press "Reset Form"
+    Then the Quantity for "<Product>" should be 0
+
+    Examples:
+      | Product             |
+      | 3 Person Dome Tent  |
+      | External Frame Backpack |
+      | Glacier Sun Glasses |
+      | Padded Socks        |
+      | Hiking Boots        |
+      | Back Country Shorts |
+
   Scenario: Perform a successful complete purchase
     Given I navigate to the product catalog
     When I enter quantity "1" for the product "Glacier Sun Glasses"

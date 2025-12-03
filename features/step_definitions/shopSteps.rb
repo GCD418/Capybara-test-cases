@@ -38,14 +38,14 @@ When('I enter quantity {string} for the product {string}') do |quantity, product
     "Glacier Sun Glasses" => "QTY_GLASSES",
     "Hiking Boots" => "QTY_BOOTS"
   }
-  
+
   field_name = product_map[product]
   fill_in(field_name, with: quantity)
 end
 
 When('I fill the billing form with the following data:') do |table|
   data = table.rows_hash
-  
+
   fill_in('billName', with: data['Name'])
   fill_in('billAddress', with: data['Address'])
   fill_in('billCity', with: data['City'])
@@ -55,7 +55,7 @@ When('I fill the billing form with the following data:') do |table|
   fill_in('billEmail', with: data['Email'])
   fill_in('CardNumber', with: data['Card Number'])
   fill_in('CardDate', with: data['Exp Date'])
-  
+
   select('Visa', from: 'CardType')
 end
 
@@ -89,13 +89,37 @@ Then('the quantity field for {string} should be empty') do |product|
     "External Frame Backpack" => "QTY_BACKPACKS"
   }
   field_name = product_map[product]
-  
+
   element = find_field(field_name)
   value = element.value
-  
+
   # In some browsers empty is "" in others "0", checking both
   expect(['', '0', nil]).to include(value)
 end
+
+When(/^I add (\d+) "([^"]*)" to the order$/) do |quantity, item_name|
+    
+    product_name_css = "body > form > table > tbody > tr:nth-child(2) > td > div > center > table > tbody > tr > td:nth-child(2) > a > strong"
+    product_names = all(product_name_css).map(&:text)
+    index = product_names.index(item_name)
+  
+    specific_quantity_input_css = "body > form > table > tbody > tr:nth-child(2) > td > div > center > table > tbody > tr:nth-child(#{index + 2}) > td:nth-child(4) > h1 > input[type=text]"
+    find(specific_quantity_input_css).set(quantity)
+  end
+
+When(/^I press "Reset Form"$/) do
+  find('input[type=reset][name=bReset]').click
+end
+
+Then(/^the Order Quantity for "([^"]*)" should be 0$/) do |item_name|
+  product_name_css = "body > form > table > tbody > tr:nth-child(2) > td > div > center > table > tbody > tr > td:nth-child(2) > a > strong"
+  product_names = all(product_name_css).map(&:text)
+  index = product_names.index(item_name)
+
+  specific_quantity_input_css = "body > form > table > tbody > tr:nth-child(2) > td > div > center > table > tbody > tr:nth-child(#{index + 2}) > td:nth-child(4) > h1 > input[type=text]"
+  expect(find(specific_quantity_input_css).value).to eq('0')
+end
+
 
 Then('I should see the receipt with the title {string}') do |title|
   expect(page).to have_content(title)
