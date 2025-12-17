@@ -26,4 +26,17 @@ class InventoryPage < BasePage
   def get_product_prices
     all('.inventory_item_price').map { |price| price.text.gsub('$', '').to_f }
   end
+
+  def add_all_products_to_cart
+    all('.btn_inventory').each(&:click)
+  end
+
+  def get_cart_badge_count
+    return 0 unless has_selector?('.shopping_cart_badge')
+    find('.shopping_cart_badge').text.to_i
+  end
+
+  def click_cart
+    find('.shopping_cart_link').click
+  end
 end

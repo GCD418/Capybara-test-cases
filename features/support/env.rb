@@ -5,7 +5,8 @@ require 'selenium-webdriver'
 
 require_relative 'pages/base_page'
 require_relative 'pages/login_page'
-require_relative 'pages/inventory_page'   
+require_relative 'pages/inventory_page'
+require_relative 'pages/cart_page'   
 
 Capybara.run_server = false
 Capybara.default_max_wait_time = 10
