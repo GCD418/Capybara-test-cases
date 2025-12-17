@@ -19,4 +19,8 @@ class CartPage < BasePage
   def click_checkout
     click_button 'checkout'
   end
+
+  def click_continue_shopping
+    click_button 'continue-shopping'
+  end
 end
