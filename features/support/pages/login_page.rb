@@ -26,4 +26,13 @@ class LoginPage < BasePage
   def error_displayed?
     has_selector?('[data-test="error"]')
   end
+
+  def visit_page
+  visit "https://www.saucedemo.com/"
+  end
+  
+  def login_button_visible?
+  has_selector?("#login-button", wait: 10)
+  end 
+
 end

@@ -73,4 +73,37 @@ end
   all('.inventory_item_desc').map(&:text)
 end
 
+
+  def inventory_container_visible?
+    has_selector?("#inventory_container", visible: true, wait: 10)
+  end
+
+  def items_count
+    all(".inventory_item", wait: 10).count
+  end
+
+  def page_not_blank?
+    has_selector?("body", visible: true, wait: 10) && page.text.strip.length > 0
+  end
+
+
+  def add_to_cart_by_name(item_name)
+    item = find(".inventory_item", text: item_name, match: :first)
+    btn  = item.find("button")
+    btn.click if btn.text.downcase.include?("add")
+  end
+
+  def cart_badge_text
+    return "0" unless has_selector?(".shopping_cart_badge", wait: 2)
+    find(".shopping_cart_badge").text.strip
+  end
+
+  def go_to_cart
+    find(".shopping_cart_link", wait: 10).click
+  end
+
+
+  def get_cart_badge_count
+    cart_badge_text.to_i
+  end
 end  

@@ -42,8 +42,6 @@ class CheckoutPage < BasePage
   def item_total_value
     find('.summary_subtotal_label').text.gsub('Item total: $', '').to_f
   end
-  
-
 
 end
 

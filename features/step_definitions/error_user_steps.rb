@@ -1,168 +1,108 @@
+# frozen_string_literal: true
 
-# Login and inventory
+require_relative '../support/pages/login_page'
+require_relative '../support/pages/inventory_page'
+require_relative '../support/pages/cart_page'
+require_relative '../support/pages/checkout_page'
+require_relative '../support/pages/checkout_overview_page'
 
 Given("I am on the SauceDemo login page") do
-  visit "https://www.saucedemo.com/"
-  expect(page).to have_selector("#login-button", wait: 10)
+  @login_page = LoginPage.new
+  @login_page.visit_page
+  expect(@login_page.login_button_visible?).to be true
 end
 
 When("I login with username {string} and password {string}") do |username, password|
-  find("#user-name").set(username)
-  find("#password").set(password)
-  find("#login-button").click
+  @login_page ||= LoginPage.new
+  @login_page.login(username, password)
 end
 
 Then("I should be on the inventory page") do
   expect(page).to have_current_path(/inventory\.html/, wait: 10)
-  expect(page).to have_selector("#inventory_container", wait: 10)
+  @inventory_page = InventoryPage.new
+  expect(@inventory_page.inventory_container_visible?).to be true
 end
 
 Then("the inventory container should be visible") do
-  expect(page).to have_selector("#inventory_container", visible: true, wait: 10)
+  @inventory_page ||= InventoryPage.new
+  expect(@inventory_page.inventory_container_visible?).to be true
 end
 
 Then("the inventory list should have at least {int} item") do |min_count|
-  items = all(".inventory_item", wait: 10)
-  expect(items.length).to be >= min_count
+  @inventory_page ||= InventoryPage.new
+  expect(@inventory_page.items_count).to be >= min_count
 end
 
 Then("the page should not be completely blank") do
-  # Simple validation: visible body with content (verifica carga parcial)
-  expect(page).to have_selector("body", visible: true)
-  expect(page.text.strip.length).to be > 0
+  @inventory_page ||= InventoryPage.new
+  expect(@inventory_page.page_not_blank?).to be true
 end
-
-
-# Cart behavior (error_user)
 
 When("I add {string} to the cart from inventory") do |item_name|
-  # Locate the product block by name and click its button
-  item = find(".inventory_item", text: item_name, match: :first)
-  button = item.find("button")
-
-  # Click only if the button is "Add to cart"
-  button.click if button.text.downcase.include?("add")
-end
-
-Then("the cart badge should show {string}") do |expected|
-  # If the bug prevents adding, the badge may not exist (treated as "0")
-  actual =
-    if page.has_selector?(".shopping_cart_badge", wait: 2)
-      find(".shopping_cart_badge").text.strip
-    else
-      "0"
-    end
-
-  expect(actual).to eq(expected)
+  @inventory_page ||= InventoryPage.new
+  @inventory_page.add_to_cart_by_name(item_name)
 end
 
 Then('the cart badge should be {string} or {string}') do |a, b|
-  # Flexible assertion to reflect unstable behavior (fallo intencional)
-  actual =
-    if page.has_selector?(".shopping_cart_badge", wait: 2)
-      find(".shopping_cart_badge").text.strip
-    else
-      "0"
-    end
-
+  @inventory_page ||= InventoryPage.new
+  actual = @inventory_page.cart_badge_text
   expect([a, b]).to include(actual)
 end
 
 Given("I have at least {int} item in the cart") do |min_count|
-  # Attempt to add one base item if the cart is empty
-  unless page.has_selector?(".shopping_cart_badge", wait: 2)
-    step %(I add "Sauce Labs Backpack" to the cart from inventory)
+  @inventory_page ||= InventoryPage.new
+
+  if @inventory_page.cart_badge_text == "0"
+    @inventory_page.add_to_cart_by_name("Sauce Labs Backpack")
   end
 
-  count =
-    if page.has_selector?(".shopping_cart_badge", wait: 2)
-      find(".shopping_cart_badge").text.to_i
-    else
-      0
-    end
-
-  expect(count).to be >= min_count
+  expect(@inventory_page.cart_badge_text.to_i).to be >= min_count
 end
 
-
-# Cart and checkout
-
 When("I go to the cart") do
-  find(".shopping_cart_link").click
+  @inventory_page ||= InventoryPage.new
+  @inventory_page.go_to_cart
   expect(page).to have_current_path(/cart\.html/, wait: 10)
+  @cart_page = CartPage.new
 end
 
 When("I start checkout") do
-  find("#checkout").click
+  @cart_page ||= CartPage.new
+  @cart_page.click_checkout
 end
 
 Then("I should see the checkout information form") do
   expect(page).to have_current_path(/checkout-step-one\.html/, wait: 10)
+  @checkout_page = CheckoutPage.new
   expect(page).to have_selector("#first-name", wait: 10)
   expect(page).to have_selector("#last-name", wait: 10)
   expect(page).to have_selector("#postal-code", wait: 10)
 end
 
-When(
-  "I fill checkout information with first name {string} last name {string} postal code {string}"
-) do |first, last, postal|
-  find("#first-name").set(first)
-  find("#last-name").set(last)
-  find("#postal-code").set(postal)
-end
-
-When("I continue checkout") do
-  find("#continue").click
+When("I fill checkout information with first name {string} last name {string} postal code {string}") do |first, last, postal|
+  @checkout_page ||= CheckoutPage.new
+  @checkout_page.fill_information(first, last, postal)
 end
 
 Then("I should move to checkout overview page") do
   expect(page).to have_current_path(/checkout-step-two\.html/, wait: 10)
-  expect(page).to have_selector(".summary_info", wait: 10)
+  @overview_page = CheckoutOverviewPage.new
 end
 
 Given("I am on the checkout overview page with at least {int} item") do |min_count|
-  # (evita duplicación)
   step %(I have at least #{min_count} item in the cart)
   step %(I go to the cart)
   step %(I start checkout)
   step %(I should see the checkout information form)
   step %(I fill checkout information with first name "Rodrigo" last name "Perez" postal code "0000")
-  step %(I continue checkout)
   step %(I should move to checkout overview page)
 end
 
-
-# Finish behavior (error_user)
 When("I finish checkout") do
-  find("#finish").click
-end
-
-Then("I should see the checkout complete page") do
-  expect(page).to have_current_path(/checkout-complete\.html/, wait: 10)
-  expect(page).to have_selector(".complete-header", wait: 10)
-end
-
-Then("the {string} button should be visible") do |button_text|
-  # On complete page, the button is "Back Home"
-  expect(page).to have_button(button_text, wait: 10)
+  @overview_page ||= CheckoutOverviewPage.new
+  @overview_page.click_finish
 end
 
 Then("I should remain on the checkout overview page") do
-  # Finish does not complete the purchase (bug intencional)
-  expect(page).to have_current_path(/checkout-step-two\.html/, wait: 10)
-end
-
-Then('the cart badge should be {string} or {string} (comportamiento inestable esperado)') do |a, b|
-  actual =
-    if page.has_selector?(".shopping_cart_badge", wait: 2)
-      find(".shopping_cart_badge").text.strip
-    else
-      "0"
-    end
-
-  expect([a, b]).to include(actual)
-end
-
-Then('I should remain on the checkout overview page (no se completa la compra)') do
   expect(page).to have_current_path(/checkout-step-two\.html/, wait: 10)
 end
