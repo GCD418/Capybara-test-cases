@@ -43,4 +43,19 @@ class InventoryPage < BasePage
   def click_product(product_name)
     find('.inventory_item_name', text: product_name).click
   end
+
+  def add_product_to_cart(product_name)
+    product_item = find('.inventory_item', text: product_name)
+    product_item.find('.btn_inventory').click
+  end
+
+  def open_menu
+    find('#react-burger-menu-btn').click
+    sleep 1
+  end
+
+  def logout
+    open_menu
+    find('#logout_sidebar_link', visible: :all).click
+  end
 end
