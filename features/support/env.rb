@@ -22,6 +22,8 @@ Capybara.register_driver :selenium_chrome do |app|
   options.add_argument('--disable-save-password-bubble')
   options.add_argument('--disable-extensions')
   options.add_argument('--disable-popup-blocking')
+  options.add_argument('--disable-blink-features=AutomationControlled')
+  options.add_argument('--incognito')
 
   options.add_argument("--disable-gpu")
   options.add_argument("--ignore-certificate-errors")
@@ -29,8 +31,15 @@ Capybara.register_driver :selenium_chrome do |app|
   options.add_argument("--no-sandbox")
   options.add_argument("--window-size=1400,900")
 
-  options.add_preference('credentials_enable_service', false)
-  options.add_preference('profile.password_manager_enabled', false)
+  prefs = {
+    'profile.default_content_setting_values.notifications' => 2,
+    'profile.password_manager_enabled' => false,
+    'credentials_enable_service' => false,
+    'profile.default_content_settings.popups' => 0
+  }
+  options.prefs = prefs
+  
+  options.exclude_switches << 'enable-automation'
 
   Capybara::Selenium::Driver.new(
     app,

@@ -7,15 +7,15 @@ class InventoryPage < BasePage
   def sort_products(sort_option)
     case sort_option
     when "Name (A to Z)"
-    #   select('Name (A to Z)', from: 'product_sort_container')
-      select('az', from: 'product_sort_container')
+      find('.product_sort_container').select('Name (A to Z)')
+    #   select('az', from: 'product_sort_container')
+    # Select busca por id. No por clase
     when "Name (Z to A)"
-    #   select('Name (Z to A)', from: 'product_sort_container')
-      select('za', from: 'product_sort_container')
+      find('.product_sort_container').select('Name (Z to A)')
     when "Price (low to high)"
-      select('Price (low to high)', from: 'product_sort_container')
+      find('.product_sort_container').select('Price (low to high)')
     when "Price (high to low)"
-      select('Price (high to low)', from: 'product_sort_container')
+      find('.product_sort_container').select('Price (high to low)')
     end
   end
 
