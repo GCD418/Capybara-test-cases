@@ -9,6 +9,7 @@ Then('all products should be in the cart') do
 end
 
 Given('the user has added all products to the cart') do
+  @inventory_page ||= InventoryPage.new
   @inventory_page.add_all_products_to_cart
   @inventory_page.click_cart
   @cart_page = CartPage.new

@@ -15,4 +15,8 @@ class CartPage < BasePage
   def remove_all_items
     all('.cart_button').each(&:click)
   end
+
+  def click_checkout
+    click_button 'checkout'
+  end
 end
