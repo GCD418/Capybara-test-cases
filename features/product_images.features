@@ -1,0 +1,11 @@
+Feature: Product images validation
+  As a user
+  I want to ensure all product images load correctly
+  So that product information is visually complete
+
+  Background:
+    Given the user is logged in as "standard_user"
+
+  Scenario: All product images should load successfully
+    When the user views the inventory page
+    Then all product images should be loaded

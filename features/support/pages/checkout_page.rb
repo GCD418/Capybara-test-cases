@@ -34,4 +34,17 @@ class CheckoutPage < BasePage
     fill_postal_code(postal_code)
     click_continue
   end
+
+  def cart_item_prices
+    all('.inventory_item_price').map { |p| p.text.gsub('$', '').to_f }
+  end
+
+  def item_total_value
+    find('.summary_subtotal_label').text.gsub('Item total: $', '').to_f
+  end
+  
+
+
 end
+
+

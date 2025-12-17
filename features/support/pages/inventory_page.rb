@@ -58,4 +58,19 @@ class InventoryPage < BasePage
     open_menu
     find('#logout_sidebar_link', visible: :all).click
   end
+
+  def all_products_have_required_elements?
+  all('.inventory_item').all? do |product|
+    product.has_selector?('.inventory_item_img') &&
+    product.has_selector?('.inventory_item_name') &&
+    product.has_selector?('.inventory_item_desc') &&
+    product.has_selector?('.inventory_item_price') &&
+    product.has_selector?('.btn_inventory')
+  end
 end
+
+  def product_descriptions
+  all('.inventory_item_desc').map(&:text)
+end
+
+end  
