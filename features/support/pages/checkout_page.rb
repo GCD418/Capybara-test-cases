@@ -27,4 +27,11 @@ class CheckoutPage < BasePage
   def error_message
     find('[data-test="error"]').text
   end
+
+  def fill_information(first_name, last_name, postal_code)
+    fill_first_name(first_name)
+    fill_last_name(last_name)
+    fill_postal_code(postal_code)
+    click_continue
+  end
 end

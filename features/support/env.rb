@@ -8,7 +8,9 @@ require_relative 'pages/login_page'
 require_relative 'pages/inventory_page'
 require_relative 'pages/cart_page'
 require_relative 'pages/product_detail_page'
-require_relative 'pages/checkout_page'   
+require_relative 'pages/checkout_page'
+require_relative 'pages/checkout_overview_page'
+require_relative 'pages/checkout_complete_page'   
 
 Capybara.run_server = false
 Capybara.default_max_wait_time = 10
