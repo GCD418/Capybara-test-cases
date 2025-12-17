@@ -1,12 +1,15 @@
 require 'capybara'
 require 'capybara/dsl'
 require 'capybara/cucumber'
-require 'selenium-webdriver'   # <-- FALTABA ESTO
+require 'selenium-webdriver'
+
+require_relative 'pages/base_page'
+require_relative 'pages/login_page'   # <-- FALTABA ESTO
 
 Capybara.run_server = false
 Capybara.default_max_wait_time = 10
 
-Capybara.app_host = "http://demo.borland.com/gmopost"
+Capybara.app_host = "https://www.saucedemo.com"
 
 ###########################################################
 # DRIVER ESTABLE
