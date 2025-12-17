@@ -39,4 +39,8 @@ class InventoryPage < BasePage
   def click_cart
     find('.shopping_cart_link').click
   end
+
+  def click_product(product_name)
+    find('.inventory_item_name', text: product_name).click
+  end
 end
